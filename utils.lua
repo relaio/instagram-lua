@@ -51,4 +51,47 @@ function UTILS.check_internet_connection()
 end
 
 
+function UTILS.get_current_ip()
+    local data, error_data = NETWORK.send_request_with_retries({
+        url = 'https://api.ipify.org/?format=json',
+        method = 'GET'
+    })
+
+    if type(data) == 'nil' then
+        return nil, error_data
+    end
+
+    if type(data.response_body.ip) == 'nil' then
+        return nil, {
+            message = 'Response body doesnt have ip',
+            data = data
+        }
+    end
+
+    return data.response_body.ip
+end
+
+
+function UTILS.wait_for_internet_connection()
+    local start_timestamp = os.time()
+    local ran_comm_center = false
+    local connected = false
+    while not connected do
+        connected = UTILS.check_internet_connection()
+        if connected then break end
+        sys.sleep(1)
+        local current_timestamp = os.time()
+        if current_timestamp - start_timestamp > 30 and not ran_comm_center then
+            os.run('killall -9 CommCenter')
+            ran_comm_center = true
+        elseif current_timestamp - start_timestamp > 60 then
+            return false, {
+                message = 'Internet connection not detected after 60 seconds'
+            }
+        end
+    end
+    return true
+end
+
+
 return UTILS
