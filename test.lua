@@ -8,8 +8,8 @@ UTILS.log_message(not nil)
 
 local a = nil
 
-UTILS.log(not a)
+UTILS.log_message(not a)
 
 local b = false
 
-UTILS.log(not b)
+UTILS.log_message(not b)
