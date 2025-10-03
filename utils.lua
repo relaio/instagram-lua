@@ -3,12 +3,31 @@ require 'wda'
 
 UTILS = {}
 
+
 -- ACTIONS
+
+function UTILS.respring()
+    UTILS.log_message('Respringing.')
+    sys.respring()
+    while app.front_bid() ~= "com.apple.springboard" do
+        sys.sleep(1)
+        device.unlock_screen()
+        sys.log('waiting for springboard')
+    end
+    sys.sleep(2)
+    device.unlock_screen()
+    sys.sleep(1)
+    -- UTILS.kill_all_running_apps()
+    app.run('ch.xxtou.XXTExplorer')
+    UTILS.log_message('Respring complete.')
+end
+
 
 function UTILS.tap_coordinate(x, y, duration)
     duration = duration or 100
     touch.tap(x, y, duration)
 end
+
 
 -- FETCH
 
@@ -26,6 +45,7 @@ function UTILS.generate_random_uuid()
     return uuid
 end
 
+
 -- LOG
 
 function UTILS.log_message(...)
@@ -35,6 +55,7 @@ function UTILS.log_message(...)
     end
     sys.log(table.unpack(arg))
 end
+
 
 -- LOCATION
 
@@ -47,7 +68,9 @@ function UTILS.simulate_location(location_info)
 
     if not (success and exit_code == 0) then
         UTILS.log_message('Failed to simulate location.', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown'))
-        return false
+        return false, {
+            message = 'Failed to simulate location.', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown')
+        }
     end
 
     return true
@@ -59,6 +82,7 @@ function UTILS.stop_location_simulation()
     os.run('locsim stop', 10)
 end
 
+
 -- NETWORK
 
 function UTILS.check_internet_connection()
@@ -67,7 +91,9 @@ function UTILS.check_internet_connection()
     if status_code == 200 then
         return true
     else
-        return false
+        return false, {
+            message = 'Not connected'
+        }
     end
 end
 
@@ -115,7 +141,7 @@ function UTILS.wait_for_internet_connection()
 end
 
 
--- CRANE-CLI
+-- APPS
 
 function UTILS.create_app_container(bid, container_name)
     if type(bid) ~= 'string' then
@@ -129,7 +155,9 @@ function UTILS.create_app_container(bid, container_name)
 
     if not (success and exit_code == 0) then
         UTILS.log_message('Failed to create new container using crane-cli.', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown'))
-        return false
+        return false, {
+            message = 'Failed to create new container using crane-cli.', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown')
+        }
     end
 
     return container_uuid
@@ -149,12 +177,121 @@ function UTILS.open_app_container(bid, container_uuid)
 
     if not (success and exit_code == 0) then
         UTILS.log_message('Failed to open container (' .. container_uuid .. ')', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown'))
-        return false
+        return false, {
+            message = 'Failed to open container (' .. container_uuid .. ')', 'Reason: ' .. (reason or 'unknown') .. ', Exit code: ' .. (exit_code or 'unknown') .. ', stdout: ' .. (stdout or 'unknown') .. ', stderr: ' .. (stderr or 'unknown')
+        }
     end
 
-    sys.sleep(2)
-
     return true
+end
+
+
+function UTILS.kill_app(bid)
+    UTILS.log_message('Killing app: ' .. bid)
+    local is_running = app.is_running(bid)
+    while is_running do
+        app.run(bid)
+        sys.sleep(0.5)
+        app.close(bid)
+        sys.sleep(0.5)
+        app.quit(bid)
+        sys.sleep(1)
+        is_running = app.is_running(bid)
+    end
+end
+
+
+function UTILS.kill_all_running_apps()
+    local identifier_list = app.bundles()
+    for _,bid in pairs(identifier_list) do
+        if app.is_running(bid) and bid ~= 'ch.xxtou.XXTExplorer' and bid ~= WDA.get_bid() then
+            UTILS.kill_app(bid)
+        end
+    end
+end
+
+
+function UTILS.verify_app_in_fg(bid)
+    if type(bid) ~= 'string' then
+        error('bid must be a string')
+    end
+    local current_app = app.front_bid()
+    if current_app ~= bid then
+        return false, {
+            message = 'App with bid ' .. bid .. ' is not in foreground'
+        }
+    end
+    return true
+end
+
+
+function UTILS.swipe_to_bottom(num_swipes)
+    num_swipes = num_swipes or 1
+    
+    local screen_width, screen_height = screen.size()
+
+    local x = math.floor(screen_width / 2)
+    local start_y = screen_height - 200
+    local end_y = 200
+
+    for _=1,num_swipes do
+        touch.on(x, start_y)
+            :step_delay(0)
+            :step_len(10)
+            :msleep(50)
+            :move(x, end_y, 5)
+            :msleep(10)
+        :off()
+        sys.sleep(2)
+    end
+end
+
+
+-- HELPERS
+
+function UTILS.split(str, delimiter)
+    local result = {}
+    local pattern = '(.-)' .. delimiter
+    local last_end = 1
+    local s, e, cap = str:find(pattern, 1)
+    
+    while s do
+        if s ~= 1 or cap ~= '' then
+            table.insert(result, cap)
+        end
+        last_end = e + 1
+        s, e, cap = str:find(pattern, last_end)
+    end
+    
+    if last_end <= #str then
+        cap = str:sub(last_end)
+        table.insert(result, cap)
+    end
+    
+    return result
+end
+
+
+function UTILS.random_choices(array, k)
+    if k <= 0 then return {} end
+    if k >= #array then k = #array end
+    
+    local copy = {}
+    for i = 1, #array do
+        copy[i] = array[i]
+    end
+    
+    for i = #copy, 2, -1 do
+        local j = math.random(i)
+        copy[i], copy[j] = copy[j], copy[i]
+    end
+    
+    local result = {}
+    for i = 1, k do
+        result[i] = copy[i]
+    end
+    
+    return result
 end
 
 
