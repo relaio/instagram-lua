@@ -67,7 +67,7 @@ function NETWORK.send_request_with_retries(params)
             sys.log('HTTP request failed (' .. code .. '), retrying in ' .. 2 ^ attempt .. ' seconds.')
             sys.sleep(2 ^ attempt)
             attempt = attempt + 1
-        elseif type(code) == 'nil' then
+        elseif not code then
             sys.log('HTTP request failed (code is nil), retrying in ' .. 2 ^ attempt .. ' seconds.')
             sys.sleep(2 ^ attempt)
             attempt = attempt + 1

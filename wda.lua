@@ -38,12 +38,12 @@ function WDA.init()
 
     for _, bid in ipairs(identifier_list) do
         local matches = string.find(string.lower(bid), 'webdriveragentrunner')
-        if type(matches) ~= 'nil' then
+        if matches then
             wda_bid = bid
         end
     end
 
-    if type(wda_bid) == 'nil' then
+    if not wda_bid then
         return nil, {
             message = 'Could not find webdriveragentrunner in identifier list'
         }
@@ -88,7 +88,7 @@ function WDA.ensure_running()
 
     local data, error_data = WDA.create_session()
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
     
@@ -108,7 +108,7 @@ function WDA.create_session()
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
@@ -176,7 +176,7 @@ function WDA.find_elements(using, value)
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
@@ -214,7 +214,7 @@ function WDA.find_element_inside_element(element_id, using, value)
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
@@ -247,7 +247,7 @@ function WDA.find_elements_inside_element(element_id, using, value)
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
@@ -280,7 +280,7 @@ function WDA.click_element(element_id)
         method = 'POST'
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
@@ -308,7 +308,7 @@ function WDA.send_keys_to_element(element_id, text)
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 

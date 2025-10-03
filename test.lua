@@ -1,15 +1,7 @@
 require 'utils'
 
-UTILS.log_message(true)
-
-UTILS.log_message(not true)
-UTILS.log_message(not false)
-UTILS.log_message(not nil)
-
-local a = nil
-
-UTILS.log_message(not a)
-
-local b = false
-
-UTILS.log_message(not b)
+while true do
+    sys.sleep(0.5)
+    local current_app = app.front_bid()
+    UTILS.log_message(current_app)
+end
