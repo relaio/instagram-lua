@@ -49,3 +49,6 @@ function UTILS.check_internet_connection()
         return false
     end
 end
+
+
+return UTILS
