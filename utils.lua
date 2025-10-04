@@ -1,7 +1,101 @@
 require 'network'
 require 'wda'
+require 'supabase'
 
 UTILS = {}
+
+
+-- FLOWS
+
+function UTILS.startup()
+    UTILS.respring()
+
+    -- INIT
+    UTILS.log_message('Initializing: Supabase, WDA')
+
+    SUPABASE.init('', '')  --TODO: Add creds
+    UTILS.init_wda()
+end
+
+
+-- WDA
+
+function UTILS.init_wda()
+    local data, error_data = WDA.init()
+    if not data then
+        UTILS.log_message('Critical error, cannot initialize WDA. Error message: ' .. (error_data and error_data.message or 'nil'), error_data)
+        error('Critical error, cannot initialize WDA. Error message: ' .. (error_data and error_data.message or 'nil'))
+    end
+end
+
+
+function UTILS.ensure_wda_running()
+    local is_running, error_data = WDA.init()
+    if not is_running then
+        UTILS.log_message('Critical error, cannot run WDA. Error message: ' .. (error_data and error_data.message or 'nil'), error_data)
+        error('Critical error, cannot run WDA. Error message: ' .. (error_data and error_data.message or 'nil'))
+    end
+end
+
+
+function UTILS.find_element_until(using, value, duration)
+    duration = duration or 20
+
+    local ensure_running = true
+    local start_time = os.time()
+
+    local element_id = WDA.find_element(using, value)
+    while not element_id do
+        sys.sleep(0.25)
+        if os.time() - start_time > duration then
+            return nil, {
+                message = 'Could not find element'
+            }
+        elseif os.time() - start_time > duration / 2 and ensure_running then
+            UTILS.ensure_wda_running()
+            ensure_running = false
+        end
+        element_id = WDA.find_element(using, value)
+    end
+
+    return element_id
+end
+
+
+function UTILS.find_elements_until(using, value, duration)
+    duration = duration or 20
+    
+    local ensure_running = true
+    local start_time = os.time()
+
+    local element_ids = WDA.find_elements(using, value)
+    while #element_ids < 1 do
+        sys.sleep(0.25)
+        if os.time() - start_time > duration then
+            return nil, {
+                message = 'Could not find elements'
+            }
+        elseif os.time() - start_time > duration / 2 and ensure_running then
+            UTILS.ensure_wda_running()
+            ensure_running = false
+        end
+        element_ids = WDA.find_elements(using, value)
+    end
+
+    return element_ids
+end
+
+
+-- DEVICE ID
+
+function UTILS.fetch_device_id()
+    local device_id = file.get_line('/device_id.txt')
+    if not device_id then
+        UTILS.log_message('No device ID found. Exiting.')
+        error('No device ID found. Exiting.')
+    end
+    return device_id
+end
 
 
 -- ACTIONS
@@ -9,7 +103,7 @@ UTILS = {}
 function UTILS.respring()
     UTILS.log_message('Respringing.')
     sys.respring()
-    while app.front_bid() ~= "com.apple.springboard" do
+    while app.front_bid() ~= 'com.apple.springboard' do
         sys.sleep(1)
         device.unlock_screen()
         sys.log('waiting for springboard')

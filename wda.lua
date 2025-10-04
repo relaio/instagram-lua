@@ -78,7 +78,7 @@ function WDA.ensure_running()
             }
         else
             app.run(config.bid)
-            sys.sleep(2)
+            sys.sleep(1.5)
             is_running = app.is_running(config.bid)
             attempts = attempts + 1
         end
@@ -147,7 +147,7 @@ function WDA.find_element(using, value)
         body = body
     })
 
-    if type(data) == 'nil' then
+    if not data then
         return nil, error_data
     end
 
