@@ -89,7 +89,7 @@ end
 -- DEVICE ID
 
 function UTILS.fetch_device_id()
-    local device_id = file.get_line('/private/var/mobile/device_id.txt')
+    local device_id = file.get_line('/private/var/mobile/device_id.txt', 1)
     if not device_id then
         UTILS.log_message('No device ID found. Exiting.')
         error('No device ID found. Exiting.')
