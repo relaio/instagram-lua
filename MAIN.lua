@@ -7,4 +7,4 @@ UTILS.log_message('Device ID: ' .. DEVICE_ID)
 
 UTILS.startup()
 
-INSTAGRAM.new_instagram()
+INSTAGRAM.new_instagram('dev')
