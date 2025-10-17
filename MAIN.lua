@@ -31,4 +31,7 @@ end
 
 
 UTILS.log_message(CONTAINER_NAME)
-UTILS.log_message(CONTAINER_UUID)
+
+sys.sleep(10)
+
+UTILS.delete_container(CONTAINER_NAME)

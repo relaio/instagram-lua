@@ -18,6 +18,78 @@ function UTILS.startup()
 end
 
 
+function UTILS.delete_container(container_name)
+    if not container_name then
+        return nil, {
+            message = 'container_name must not be nil'
+        }
+    end
+
+    UTILS.kill_app('com.mobile.Preferences')
+
+    app.run('com.mobile.Preferences')
+    UTILS.swipe_to_bottom()
+
+    local crane_id, error_data = UTILS.find_element_until('name', 'Crane')
+    if not crane_id then
+        return nil, {
+            message = 'Couldnt find crane in settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(crane_id)
+
+    local applications, error_data = UTILS.find_element_until('name', 'applications')
+    if not applications then
+        return nil, {
+            message = 'Couldnt find Applications in crane settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(applications)
+
+    local feeld, error_data = UTILS.find_element_until('name', 'feeld')
+    if not feeld then
+        return nil, {
+            message = 'Couldnt find Feeld in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(feeld)
+
+    local edit, error_data = UTILS.find_element_until('name', 'edit')
+    if not edit then
+        return nil, {
+            message = 'Couldnt find Edit in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(edit)
+
+    local delete_button, error_data = UTILS.find_element_until('name', 'Delete ' .. container_name)
+    if not delete_button then
+        return nil, {
+            message = 'Couldnt find delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(delete_button)
+
+    local delete, error_data = UTILS.find_element_until('name', 'Delete')
+    if not delete then
+        return nil, {
+            message = 'Couldnt find actual delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(delete)
+
+    delete, error_data = UTILS.find_element_until('name', 'Delete')
+    if not delete then
+        return nil, {
+            message = 'Couldnt find actual actual delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+        }
+    end
+    WDA.click_element(delete)
+
+    UTILS.kill_app('com.mobile.Preferences')
+end
+
+
 -- WDA
 
 function UTILS.init_wda()
