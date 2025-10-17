@@ -28,7 +28,6 @@ function UTILS.delete_container(container_name)
     UTILS.kill_app('com.apple.Preferences')
 
     app.run('com.apple.Preferences')
-    UTILS.swipe_to_bottom()
 
     local crane_id, error_data = UTILS.find_element_until('name', 'Crane')
     if not crane_id then
@@ -38,7 +37,7 @@ function UTILS.delete_container(container_name)
     end
     WDA.click_element(crane_id)
 
-    local applications, error_data = UTILS.find_element_until('name', 'applications')
+    local applications, error_data = UTILS.find_element_until('name', 'Applications')
     if not applications then
         return nil, {
             message = 'Couldnt find Applications in crane settings. Error message: ' .. (error_data and error_data.message or 'nil')
@@ -46,7 +45,7 @@ function UTILS.delete_container(container_name)
     end
     WDA.click_element(applications)
 
-    local feeld, error_data = UTILS.find_element_until('name', 'feeld')
+    local feeld, error_data = UTILS.find_element_until('name', 'Feeld')
     if not feeld then
         return nil, {
             message = 'Couldnt find Feeld in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
@@ -54,7 +53,7 @@ function UTILS.delete_container(container_name)
     end
     WDA.click_element(feeld)
 
-    local edit, error_data = UTILS.find_element_until('name', 'edit')
+    local edit, error_data = UTILS.find_element_until('name', 'Edit')
     if not edit then
         return nil, {
             message = 'Couldnt find Edit in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
