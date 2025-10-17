@@ -47,40 +47,56 @@ function UTILS.delete_container(container_name)
 
     local applications, error_data = UTILS.find_element_until('name', 'Applications')
     if not applications then
-        return nil, {
-            message = 'Couldnt find Applications in crane settings. Error message: ' .. (error_data and error_data.message or 'nil')
-        }
+        WDA.click_element(WDA.find_element('name', 'Crane'))
+        applications = WDA.find_element('name', 'Applications')
+        if not applications then
+            return nil, {
+                message = 'Couldnt find Applications in crane settings. Error message: ' .. (error_data and error_data.message or 'nil')
+            }
+        end
     end
     WDA.click_element(applications)
 
     local insta, error_data = UTILS.find_element_until('name', 'Instagram')
     if not insta then
-        return nil, {
-            message = 'Couldnt find Instagram in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
-        }
+        WDA.click_element(WDA.find_element('name', 'Applications'))
+        insta = WDA.find_element('name', 'Instagram')
+        if not insta then
+            return nil, {
+                message = 'Couldnt find Instagram in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
+            }
+        end
     end
     WDA.click_element(insta)
 
     local edit, error_data = UTILS.find_element_until('name', 'Edit')
     if not edit then
-        return nil, {
-            message = 'Couldnt find Edit in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
-        }
+        WDA.click_element(WDA.find_element('name', 'Instagram'))
+        edit = WDA.find_element('name', 'Edit')
+        if not edit then
+            return nil, {
+                message = 'Couldnt find Edit in crane Instagram settings. Error message: ' .. (error_data and error_data.message or 'nil')
+            }
+        end
     end
     WDA.click_element(edit)
 
     local delete_button, error_data = UTILS.find_element_until('name', 'Delete ' .. container_name)
     if not delete_button then
-        return nil, {
-            message = 'Couldnt find delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
-        }
+        WDA.click_element(WDA.find_element('name', 'Edit'))
+        delete_button = WDA.find_element('name', 'Delete ' .. container_name)
+        if not delete_button then
+            return nil, {
+                message = 'Couldnt find delete button for container name in crane Instagram settings. Error message: ' .. (error_data and error_data.message or 'nil')
+            }
+        end
     end
     WDA.click_element(delete_button)
 
     local delete, error_data = UTILS.find_element_until('name', 'Delete')
     if not delete then
         return nil, {
-            message = 'Couldnt find actual delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+            message = 'Couldnt find actual delete button for container name in crane Instagram settings. Error message: ' .. (error_data and error_data.message or 'nil')
         }
     end
     WDA.click_element(delete)
@@ -88,7 +104,7 @@ function UTILS.delete_container(container_name)
     delete, error_data = UTILS.find_element_until('name', 'Delete')
     if not delete then
         return nil, {
-            message = 'Couldnt find actual actual delete button for container name in crane Feeld settings. Error message: ' .. (error_data and error_data.message or 'nil')
+            message = 'Couldnt find actual actual delete button for container name in crane Instagram settings. Error message: ' .. (error_data and error_data.message or 'nil')
         }
     end
     WDA.click_element(delete)
