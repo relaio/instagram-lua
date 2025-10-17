@@ -49,13 +49,13 @@ function UTILS.delete_container(container_name)
     end
     WDA.click_element(applications)
 
-    local feeld, error_data = UTILS.find_element_until('name', 'Feeld')
-    if not feeld then
+    local insta, error_data = UTILS.find_element_until('name', 'Instagram')
+    if not insta then
         return nil, {
-            message = 'Couldnt find Feeld in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
+            message = 'Couldnt find Instagram in crane applications. Error message: ' .. (error_data and error_data.message or 'nil')
         }
     end
-    WDA.click_element(feeld)
+    WDA.click_element(insta)
 
     local edit, error_data = UTILS.find_element_until('name', 'Edit')
     if not edit then
