@@ -24,7 +24,7 @@ function INSTAGRAM.new_instagram(prefix)
     end
     if to_return then
         UTILS.log_message('Could not create new Instagram container after 3 retries.')
-        return nil, nil, {
+        return nil, {
             message = 'Could not create new Instagram container after 3 retries.'
         }
     end
@@ -44,12 +44,15 @@ function INSTAGRAM.new_instagram(prefix)
         attempts = attempts + 1
     end
     if to_return then
-        return nil, nil, {
+        return nil, {
             message = 'Failed to open Instagram container after 3 retries.'
         }
     end
 
-    return container_name, container_uuid
+    return {
+        container_name = container_name,
+        container_uuid = container_uuid
+    }
 end
 
 

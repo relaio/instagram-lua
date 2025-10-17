@@ -20,11 +20,15 @@ CONTAINER_UUID = nil
 -- MAIN
 
 do -- New Instagram
-    local container_name, container_uuid, error_data = INSTAGRAM.new_instagram('dev')
-    if not container_name and not container_uuid then
+    local container_data, error_data = INSTAGRAM.new_instagram('dev')
+    if not container_data then
         UTILS.log_message('[CRITICAL] Failed to create and open new Instagram container. Error message: ' .. (error_data and error_data.message or 'nil'))
         os.exit(1)
     end
-    CONTAINER_NAME = container_name
-    CONTAINER_UUID = container_uuid
+    CONTAINER_NAME = container_data.container_name
+    CONTAINER_UUID = container_data.container_uuid
 end
+
+
+UTILS.log_message(CONTAINER_NAME)
+UTILS.log_message(CONTAINER_UUID)

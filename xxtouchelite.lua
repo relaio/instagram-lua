@@ -1,5 +1,7 @@
 ---@meta
 
+image = {}
+
 file = {}
 
 sys = {}

@@ -195,7 +195,9 @@ end
 
 function WDA.find_element_inside_element(element_id, using, value)
     if not element_id then
-        return nil, 'element_id cannot be nil'
+        return nil, {
+            message = 'element_id cannot be nil'
+        }
     end
     
     if not WDA.session_id then
@@ -228,7 +230,9 @@ end
 
 function WDA.find_elements_inside_element(element_id, using, value)
     if not element_id then
-        return nil, 'element_id cannot be nil'
+        return nil, {
+            message = 'element_id cannot be nil'
+        }
     end
     
     if not WDA.session_id then
@@ -266,7 +270,9 @@ end
 
 function WDA.click_element(element_id)
     if not element_id then
-        return nil, 'element_id cannot be nil'
+        return nil, {
+            message = 'element_id cannot be nil'
+        }
     end
     
     if not WDA.session_id then
@@ -290,7 +296,9 @@ end
 
 function WDA.send_keys_to_element(element_id, text)
     if not element_id then
-        return nil, 'element_id cannot be nil'
+        return nil, {
+            message = 'element_id cannot be nil'
+        }
     end
     
     if not WDA.session_id then

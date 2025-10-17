@@ -1,7 +1,2 @@
-require 'utils'
-
-while true do
-    sys.sleep(0.1)
-    local current_app = app.front_bid()
-    UTILS.log_message(current_app)
-end
+http.download('https://btjymvllfmlkjjdzlypu.supabase.co/storage/v1/object/public/test/test.mp4', '/private/var/mobile/Media/1ferver/video.mp4')
+image.video_to_album('/private/var/mobile/Media/1ferver/video.mp4')
