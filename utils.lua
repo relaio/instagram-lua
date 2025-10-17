@@ -29,6 +29,10 @@ function UTILS.delete_container(container_name)
 
     app.run('com.apple.Preferences')
 
+    sys.sleep(2)
+
+    UTILS.swipe_to_bottom()
+
     local crane_id, error_data = UTILS.find_element_until('name', 'Crane')
     if not crane_id then
         return nil, {
