@@ -25,9 +25,9 @@ function UTILS.delete_container(container_name)
         }
     end
 
-    UTILS.kill_app('com.mobile.Preferences')
+    UTILS.kill_app('com.apple.Preferences')
 
-    app.run('com.mobile.Preferences')
+    app.run('com.apple.Preferences')
     UTILS.swipe_to_bottom()
 
     local crane_id, error_data = UTILS.find_element_until('name', 'Crane')
@@ -86,7 +86,7 @@ function UTILS.delete_container(container_name)
     end
     WDA.click_element(delete)
 
-    UTILS.kill_app('com.mobile.Preferences')
+    UTILS.kill_app('com.apple.Preferences')
 end
 
 
