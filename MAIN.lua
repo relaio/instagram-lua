@@ -32,6 +32,6 @@ end
 
 UTILS.log_message(CONTAINER_NAME)
 
-sys.sleep(10)
+sys.sleep(3)
 
 UTILS.delete_container(CONTAINER_NAME)
