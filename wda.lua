@@ -22,7 +22,8 @@ require 'network'
 -- INIT
 
 WDA = {
-    session_id = nil
+    session_id = nil,
+    bid = nil
 }
 
 local config = {
@@ -52,6 +53,7 @@ function WDA.init()
     sys.log('WDA bid: ' .. wda_bid)
 
     config.bid = wda_bid
+    WDA.bid = wda_bid
 
     return WDA.ensure_running()
 end
