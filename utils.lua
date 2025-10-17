@@ -10,11 +10,8 @@ UTILS = {}
 function UTILS.startup()
     UTILS.init_wda()
 
-    sys.log(WDA.bid)
+    UTILS.kill_app(WDA.get_bid())
 
-    UTILS.kill_app(WDA.bid)
-    
-    UTILS.kill_app()
     UTILS.respring()
 
     -- INIT
