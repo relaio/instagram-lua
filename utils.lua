@@ -8,6 +8,11 @@ UTILS = {}
 -- FLOWS
 
 function UTILS.startup()
+    UTILS.init_wda()
+
+    UTILS.kill_app(WDA.get_bid())
+    
+    UTILS.kill_app()
     UTILS.respring()
 
     -- INIT
