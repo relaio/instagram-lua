@@ -29,7 +29,6 @@ CONTAINER_UUID = nil
 --     CONTAINER_UUID = container_data.container_uuid
 -- end
 
-UTILS.delete_container('js')
 UTILS.delete_container('jsjd')
 UTILS.delete_container('gahsn')
 UTILS.delete_container('kaosh')
